@@ -1,0 +1,9 @@
+{
+  "pluginAlias": "homebridge-valetudo",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {}
+  }
+}

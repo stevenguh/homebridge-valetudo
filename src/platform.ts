@@ -1,0 +1,121 @@
+import {
+  API,
+  APIEvent,
+  DynamicPlatformPlugin,
+  Logger,
+  PlatformAccessory,
+  PlatformConfig,
+} from "homebridge";
+
+import { PLATFORM_NAME, PLUGIN_NAME } from "./settings";
+import { Browser, tcp } from "dnssd";
+import { ValetudoTxtKey, ValetudoService } from "./types/discovery";
+import { ValetudoDevice } from "./valetudoDevice";
+import { HomebridgeContext } from "./types/homebridgeContext";
+import { milliseconds } from "./duration";
+
+/**
+ * ValetudoPlatformPlugin
+ * This class is the main constructor for your plugin, this is where you should
+ * parse the user config and discover/register accessories with Homebridge.
+ */
+export class ValetudoPlatformPlugin
+  implements DynamicPlatformPlugin, HomebridgeContext
+{
+  public readonly service = this.api.hap.Service;
+  public readonly characteristic = this.api.hap.Characteristic;
+
+  public readonly initedDevices = new Map<string, ValetudoDevice>();
+  public readonly cachedAccessories = new Map<string, PlatformAccessory>();
+
+  constructor(
+    public readonly logger: Logger,
+    public readonly config: PlatformConfig,
+    public readonly api: API
+  ) {
+    this.logger.debug("Finished initializing platform:", this.config.name);
+
+    // When this event is fired it means Homebridge has restored all cached accessories from disk.
+    // Dynamic Platform plugins should only register new accessories after this event was fired,
+    // in order to ensure they weren't added to homebridge already. This event can also be used
+    // to start discovery of new accessories.
+    this.api.on(APIEvent.DID_FINISH_LAUNCHING, () => {
+      this.logger.debug("Starting service discovery");
+      new Browser<ValetudoTxtKey>(tcp("valetudo"))
+        .on("serviceUp", this.handleServiceUp.bind(this))
+        .on("serviceDown", this.handleServiceDown.bind(this))
+        .start();
+
+      // For all the cached accessories that's not found after 60 seconds.
+      setTimeout(() => {
+        for (const [uuid, accessory] of this.cachedAccessories) {
+          if (!this.initedDevices.has(uuid)) {
+            this.logger.info(
+              "Removing existing accessory from cache:",
+              accessory.displayName
+            );
+            this.cachedAccessories.delete(uuid);
+            this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+              accessory,
+            ]);
+          }
+        }
+      }, milliseconds({ minutes: 5 }));
+    });
+  }
+
+  /**
+   * This function is invoked when homebridge restores cached accessories from disk at startup.
+   * It should be used to setup event handlers for characteristics and update respective values.
+   */
+  configureAccessory(accessory: PlatformAccessory) {
+    this.logger.info(
+      "Loading accessory from cache:",
+      accessory.displayName,
+      accessory.UUID
+    );
+    // add the restored accessory to the accessories cache so we can track if it has already been registered
+    this.cachedAccessories.set(accessory.UUID, accessory);
+  }
+
+  private handleServiceUp(service: ValetudoService) {
+    const uuid = this.api.hap.uuid.generate(service.txt.id);
+    const cachedAccessory = this.cachedAccessories.get(uuid);
+    if (cachedAccessory) {
+      this.logger.info(
+        "Restoring cached accessory:",
+        cachedAccessory.displayName
+      );
+      const device = new ValetudoDevice(this, cachedAccessory, service);
+      device.init();
+      this.initedDevices.set(uuid, device);
+    } else {
+      // the accessory does not yet exist, so we need to create it
+      this.logger.info("Adding new accessory:", service.txt.id);
+      const accessory = new this.api.platformAccessory(service.txt.id, uuid);
+      const device = new ValetudoDevice(this, accessory, service);
+      device.init();
+      this.initedDevices.set(uuid, device);
+
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+        accessory,
+      ]);
+    }
+  }
+
+  private handleServiceDown(service: ValetudoService) {
+    const uuid = this.api.hap.uuid.generate(service.txt.id);
+    const existingDevice = this.initedDevices.get(uuid);
+    if (existingDevice) {
+      this.logger.info(
+        "Removing initialized device due to service down:",
+        existingDevice.accessory.displayName
+      );
+      existingDevice.dispose();
+      this.initedDevices.delete(uuid);
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+        existingDevice.accessory,
+      ]);
+    }
+  }
+}

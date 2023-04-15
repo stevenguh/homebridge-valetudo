@@ -1,0 +1,51 @@
+{
+  "displayName": "Homebridge Valetudo",
+  "name": "homebridge-valetudo",
+  "version": "1.0.0",
+  "description": "A homebridge plugin to control Valetudo devices with zero config.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevenguh/homebridge-valetudo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stevenguh/homebridge-valetudo/issues"
+  },
+  "engines": {
+    "node": ">=14.18.1",
+    "homebridge": ">=1.3.5"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "format": "prettier --ignore-path .gitignore --write .",
+    "format-check": "prettier --ignore-path .gitignore --check .",
+    "lint": "eslint src/**.ts --max-warnings=0",
+    "watch": "npm run build && npm link && nodemon",
+    "build": "rimraf ./dist && tsc",
+    "prepublishOnly": "npm run lint && npm run build"
+  },
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "devDependencies": {
+    "@types/eventsource": "^1.1.11",
+    "@types/node": "^16.10.9",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.8.0",
+    "homebridge": "^1.3.5",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.7",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.3.0",
+    "typed-emitter": "^2.1.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "axios": "^1.3.5",
+    "dnssd": "^0.4.1",
+    "eventsource": "^2.0.2",
+    "reconnecting-eventsource": "^1.6.2"
+  }
+}
