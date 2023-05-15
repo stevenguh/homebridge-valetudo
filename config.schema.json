@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "homebridge-valetudo",
+  "pluginAlias": "Valetudo",
   "pluginType": "platform",
   "singular": true,
   "schema": {
