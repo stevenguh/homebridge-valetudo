@@ -20,8 +20,7 @@ import { milliseconds } from "./duration";
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class ValetudoPlatformPlugin
-  implements DynamicPlatformPlugin, HomebridgeContext
-{
+  implements DynamicPlatformPlugin, HomebridgeContext {
   public readonly service = this.api.hap.Service;
   public readonly characteristic = this.api.hap.Characteristic;
 
@@ -43,10 +42,9 @@ export class ValetudoPlatformPlugin
       this.logger.debug("Starting service discovery");
       new Browser<ValetudoTxtKey>(tcp("valetudo"))
         .on("serviceUp", this.handleServiceUp.bind(this))
-        .on("serviceDown", this.handleServiceDown.bind(this))
         .start();
 
-      // For all the cached accessories that's not found after 60 seconds.
+      // Remove all cached devices accessories that's not found after 5 minutes.
       setTimeout(() => {
         for (const [uuid, accessory] of this.cachedAccessories) {
           if (!this.initedDevices.has(uuid)) {
@@ -99,22 +97,6 @@ export class ValetudoPlatformPlugin
 
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
         accessory,
-      ]);
-    }
-  }
-
-  private handleServiceDown(service: ValetudoService) {
-    const uuid = this.api.hap.uuid.generate(service.txt.id);
-    const existingDevice = this.initedDevices.get(uuid);
-    if (existingDevice) {
-      this.logger.info(
-        "Removing initialized device due to service down:",
-        existingDevice.accessory.displayName
-      );
-      existingDevice.dispose();
-      this.initedDevices.delete(uuid);
-      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
-        existingDevice.accessory,
       ]);
     }
   }
