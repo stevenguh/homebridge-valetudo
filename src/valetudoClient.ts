@@ -109,7 +109,7 @@ export class ValetudoClient {
         this.client.defaults.baseURL
       );
       const eventSource = new ReconnectingEventSource(url.href, {
-        max_retry_time: 30000,
+        max_retry_time: 3000,
         eventSourceClass: EventSource,
       });
       this.eventSources.set(ValetudoEventKey.StateAttributes, eventSource);

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update the timeout to 3000 ms for reconnecting SSE
+
 ## [1.0.2] - 2023-05-16
 
 ### Fixed
