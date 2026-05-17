@@ -107,3 +107,5 @@ export class ValetudoPlatformPlugin
     }
   }
 }
+
+export default ValetudoPlatformPlugin;

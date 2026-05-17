@@ -4,6 +4,13 @@
   "singular": true,
   "schema": {
     "type": "object",
-    "properties": {}
+    "properties": {
+      "enableMatter": {
+        "type": "boolean",
+        "title": "Enable Matter Support",
+        "description": "Enable Matter accessory support (requires Homebridge 2.0+). Defaults to true if Homebridge supports Matter.",
+        "default": true
+      }
+    }
   }
 }

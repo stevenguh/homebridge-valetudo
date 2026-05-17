@@ -114,6 +114,8 @@ export interface StatusState {
   metaData: Record<string, never>;
   value: RobotStatus;
   flag: CleaningFlag;
+  /** Only present when value is 'error'. */
+  error?: { description: string };
 }
 
 export enum BatteryStateFlag {

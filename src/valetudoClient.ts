@@ -15,6 +15,7 @@ import {
   RobotAttribute,
   RobotInformation,
   RobotProperties,
+  Segment,
   SpeakerVolumeState,
 } from "./types/valetudo";
 import ReconnectingEventSource from "reconnecting-eventsource";
@@ -188,6 +189,30 @@ export class ValetudoClient {
       .put(`robot/capabilities/${Capability.BasicControl}`, {
         action,
       })
+      .then((res) => res.data);
+  }
+
+  @logMethod()
+  getSegments() {
+    return this.client
+      .get<Segment[]>(`robot/capabilities/${Capability.MapSegmentation}`)
+      .then((res) => res.data);
+  }
+
+  @logMethod()
+  putMapSegmentationAction(segmentIds: string[]) {
+    return this.client
+      .put(`robot/capabilities/${Capability.MapSegmentation}`, {
+        action: "start_segment_action",
+        segment_ids: segmentIds,
+      })
+      .then((res) => res.data);
+  }
+
+  @logMethod()
+  putLocate() {
+    return this.client
+      .put(`robot/capabilities/${Capability.Locate}`, { action: "locate" })
       .then((res) => res.data);
   }
 
