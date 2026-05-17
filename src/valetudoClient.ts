@@ -116,7 +116,7 @@ export class ValetudoClient {
 
       eventSource.addEventListener(
         ValetudoEventKey.StateAttributes,
-        (event: MessageEvent<string>) => {
+        (event: MessageEvent) => {
           this.emitter.emit(
             ValetudoEventKey.StateAttributes,
             JSON.parse(event.data)
