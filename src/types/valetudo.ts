@@ -63,6 +63,7 @@ export enum RawMapEntityType {
   NoGoArea = "no_go_area",
   NoMopArea = "no_mop_area",
   ActiveZone = "active_zone",
+  Carpet = "carpet",
 }
 
 export interface RawMapDataMetaData {
@@ -147,6 +148,7 @@ export enum PresetSelectionStateMode {
   Vacuum = "vacuum",
   Mop = "mop",
   VacuumAndMop = "vacuum_and_mop",
+  VacuumThenMop = "vacuum_then_mop",
 }
 
 export interface PresetSelectionState {
@@ -191,11 +193,15 @@ export enum Capability {
   CurrentStatistics = "CurrentStatisticsCapability",
   DoNotDisturb = "DoNotDisturbCapability",
   FanSpeedControl = "FanSpeedControlCapability",
+  CarpetSensorModeControl = "CarpetSensorModeControlCapability",
   GoToLocation = "GoToLocationCapability",
+  HighResolutionManualControl = "HighResolutionManualControlCapability",
   KeyLock = "KeyLockCapability",
   Locate = "LocateCapability",
   ManualControl = "ManualControlCapability",
   MapReset = "MapResetCapability",
+  ObstacleAvoidanceControl = "ObstacleAvoidanceControlCapability",
+  PetObstacleAvoidanceControl = "PetObstacleAvoidanceControlCapability",
   MapSegmentEdit = "MapSegmentEditCapability",
   MapSegmentRename = "MapSegmentRenameCapability",
   MapSegmentation = "MapSegmentationCapability",
