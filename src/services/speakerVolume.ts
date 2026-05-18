@@ -12,7 +12,7 @@ export class SpeakerVolumeService extends BaseService {
   constructor(
     context: HomebridgeContext,
     accessory: PlatformAccessory,
-    client: ValetudoClient
+    client: ValetudoClient,
   ) {
     super(context, accessory, client);
 

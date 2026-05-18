@@ -11,14 +11,14 @@ interface LogOptions {
 }
 
 export function logMethod<This extends ClassWithLogger, Args extends any[]>(
-  options: LogOptions = { level: LogLevel.DEBUG }
+  options: LogOptions = { level: LogLevel.DEBUG },
 ) {
   return function decorator(
     target: (this: This, ...args: Args) => any,
     context: ClassMethodDecoratorContext<
       This,
       (this: This, ...args: Args) => any
-    >
+    >,
   ) {
     function replacementMethod(this: This, ...args: Args): any {
       const methodName = `${this.constructor.name}.${String(context.name)}`;
@@ -39,7 +39,7 @@ export function logMethod<This extends ClassWithLogger, Args extends any[]>(
                 : JSON.stringify(value);
               this.logger?.log(
                 options.level,
-                `${methodName} async => ${resultString}`
+                `${methodName} async => ${resultString}`,
               );
               return value;
             })
@@ -72,13 +72,13 @@ interface PromiseCache<T> {
 }
 
 export function cachePromise<This extends ClassWithLogger, Result>(
-  ttl: number
+  ttl: number,
 ) {
   let cache: PromiseCache<Result> | undefined = undefined;
 
   return function decorator(
     target: (this: This) => Promise<Result>,
-    context: ClassMethodDecoratorContext<This, (this: This) => Promise<Result>>
+    context: ClassMethodDecoratorContext<This, (this: This) => Promise<Result>>,
   ) {
     function replacementMethod(this: This): Promise<Result> {
       const methodName = `${this.constructor.name}.${String(context.name)}`;

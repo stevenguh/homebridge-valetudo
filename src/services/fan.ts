@@ -51,7 +51,7 @@ export class FanService extends BaseService {
     accessory: PlatformAccessory,
     client: ValetudoClient,
     attributes: RobotAttribute[],
-    private readonly fanPresets: PresetSelectionStateIntensity[]
+    private readonly fanPresets: PresetSelectionStateIntensity[],
   ) {
     super(platform, accessory, client);
 
@@ -61,7 +61,7 @@ export class FanService extends BaseService {
     this.fan = this.getOrAddNamedService(
       this.service.Fanv2,
       "Vacuum",
-      "Vacuum"
+      "Vacuum",
     );
 
     this.characteristics = [
@@ -108,13 +108,13 @@ export class FanService extends BaseService {
   private async setActive(value: CharacteristicValue) {
     const active = value as boolean;
     await this.client.putBasicControlAction(
-      active ? BasicControlAction.Start : BasicControlAction.Pause
+      active ? BasicControlAction.Start : BasicControlAction.Pause,
     );
   }
 
   private getRotationSpeed() {
     const index = this.fanPresets.indexOf(
-      this.fanPresetSelection.value as PresetSelectionStateIntensity
+      this.fanPresetSelection.value as PresetSelectionStateIntensity,
     );
     if (index === -1) {
       return null;

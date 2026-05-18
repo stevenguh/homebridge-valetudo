@@ -24,12 +24,12 @@ export class ValetudoDevice {
   constructor(
     private readonly context: HomebridgeContext,
     public readonly accessory: PlatformAccessory,
-    private readonly dnsService: ValetudoService
+    private readonly dnsService: ValetudoService,
   ) {
     this.client = new ValetudoClient(
       dnsService.addresses[0],
       dnsService.port,
-      context.logger
+      context.logger,
     );
     this.services = [];
   }
@@ -45,11 +45,11 @@ export class ValetudoDevice {
         this.context,
         this.accessory,
         this.client,
-        this.dnsService.txt
-      )
+        this.dnsService.txt,
+      ),
     );
     this.services.push(
-      new BatteryService(this.context, this.accessory, this.client, attributes)
+      new BatteryService(this.context, this.accessory, this.client, attributes),
     );
 
     if (
@@ -57,7 +57,7 @@ export class ValetudoDevice {
       capabilities.has(Capability.FanSpeedControl)
     ) {
       const fanPresets = await this.client.getPresetSelections(
-        Capability.FanSpeedControl
+        Capability.FanSpeedControl,
       );
       this.services.push(
         new FanService(
@@ -65,14 +65,14 @@ export class ValetudoDevice {
           this.accessory,
           this.client,
           attributes,
-          fanPresets
-        )
+          fanPresets,
+        ),
       );
     }
 
     if (capabilities.has(Capability.SpeakerVolumeControl)) {
       this.services.push(
-        new SpeakerVolumeService(this.context, this.accessory, this.client)
+        new SpeakerVolumeService(this.context, this.accessory, this.client),
       );
     }
 
@@ -83,8 +83,8 @@ export class ValetudoDevice {
           this.context,
           this.accessory,
           this.client,
-          properties
-        )
+          properties,
+        ),
       );
     }
   }

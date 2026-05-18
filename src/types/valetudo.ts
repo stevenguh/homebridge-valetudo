@@ -762,9 +762,9 @@ export interface ValetudoCustomizations {
 }
 
 export const isAttribute = <C extends RobotAttributeClass>(
-  clazz: C
+  clazz: C,
 ): ((
-  attribute: RobotAttribute
+  attribute: RobotAttribute,
 ) => attribute is Extract<RobotAttribute, { __class: C }>) => {
   return (attribute): attribute is Extract<RobotAttribute, { __class: C }> => {
     return attribute.__class === clazz;

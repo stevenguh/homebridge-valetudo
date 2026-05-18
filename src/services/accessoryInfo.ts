@@ -13,7 +13,7 @@ export class AccessoryInfoService extends BaseService {
     context: HomebridgeContext,
     accessory: PlatformAccessory,
     client: ValetudoClient,
-    txt: Record<ValetudoTxtKey, string>
+    txt: Record<ValetudoTxtKey, string>,
   ) {
     super(context, accessory, client);
 

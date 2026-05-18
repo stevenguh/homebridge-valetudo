@@ -14,7 +14,7 @@ export abstract class BaseService {
   protected constructor(
     protected readonly context: HomebridgeContext,
     protected readonly accessory: PlatformAccessory,
-    protected readonly client: ValetudoClient
+    protected readonly client: ValetudoClient,
   ) {
     this.logger.debug(`Creating ${this.constructor.name}`);
   }
@@ -41,7 +41,7 @@ export abstract class BaseService {
   protected getOrAddNamedService(
     service: WithUUID<typeof Service>,
     name: string,
-    subType: string
+    subType: string,
   ) {
     return (
       this.accessory.getService(name) ||

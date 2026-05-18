@@ -20,7 +20,8 @@ import { milliseconds } from "./duration";
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class ValetudoPlatformPlugin
-  implements DynamicPlatformPlugin, HomebridgeContext {
+  implements DynamicPlatformPlugin, HomebridgeContext
+{
   public readonly service = this.api.hap.Service;
   public readonly characteristic = this.api.hap.Characteristic;
 
@@ -30,7 +31,7 @@ export class ValetudoPlatformPlugin
   constructor(
     public readonly logger: Logger,
     public readonly config: PlatformConfig,
-    public readonly api: API
+    public readonly api: API,
   ) {
     this.logger.debug("Finished initializing platform:", this.config.name);
 
@@ -45,20 +46,25 @@ export class ValetudoPlatformPlugin
         .start();
 
       // Remove all cached devices accessories that's not found after 5 minutes.
-      setTimeout(() => {
-        for (const [uuid, accessory] of this.cachedAccessories) {
-          if (!this.initedDevices.has(uuid)) {
-            this.logger.info(
-              "Removing existing accessory from cache:",
-              accessory.displayName
-            );
-            this.cachedAccessories.delete(uuid);
-            this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
-              accessory,
-            ]);
+      setTimeout(
+        () => {
+          for (const [uuid, accessory] of this.cachedAccessories) {
+            if (!this.initedDevices.has(uuid)) {
+              this.logger.info(
+                "Removing existing accessory from cache:",
+                accessory.displayName,
+              );
+              this.cachedAccessories.delete(uuid);
+              this.api.unregisterPlatformAccessories(
+                PLUGIN_NAME,
+                PLATFORM_NAME,
+                [accessory],
+              );
+            }
           }
-        }
-      }, milliseconds({ minutes: 5 }));
+        },
+        milliseconds({ minutes: 5 }),
+      );
     });
   }
 
@@ -70,7 +76,7 @@ export class ValetudoPlatformPlugin
     this.logger.info(
       "Loading accessory from cache:",
       accessory.displayName,
-      accessory.UUID
+      accessory.UUID,
     );
     // add the restored accessory to the accessories cache so we can track if it has already been registered
     this.cachedAccessories.set(accessory.UUID, accessory);
@@ -82,7 +88,7 @@ export class ValetudoPlatformPlugin
     if (cachedAccessory) {
       this.logger.info(
         "Restoring cached accessory:",
-        cachedAccessory.displayName
+        cachedAccessory.displayName,
       );
       const device = new ValetudoDevice(this, cachedAccessory, service);
       device.init();

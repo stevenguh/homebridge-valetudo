@@ -30,7 +30,7 @@ export class BatteryService extends BaseService {
     context: HomebridgeContext,
     accessory: PlatformAccessory,
     client: ValetudoClient,
-    attributes: RobotAttribute[]
+    attributes: RobotAttribute[],
   ) {
     super(context, accessory, client);
 

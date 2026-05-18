@@ -25,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix the incorrect `platform` name in the config
 
-
 ## [1.0.0] - 2023-05-14
 
 Initial release

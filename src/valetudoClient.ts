@@ -56,7 +56,7 @@ const presetOrder = [
 ];
 
 function sortPresets<T extends PresetSelectionCapacity>(
-  presets: PresetSelectionValue<T>[]
+  presets: PresetSelectionValue<T>[],
 ) {
   return presets.sort((a, b) => {
     return presetOrder.indexOf(a) - presetOrder.indexOf(b);
@@ -106,7 +106,7 @@ export class ValetudoClient {
     if (!this.eventSources.has(ValetudoEventKey.StateAttributes)) {
       const url = new URL(
         "robot/state/attributes/sse",
-        this.client.defaults.baseURL
+        this.client.defaults.baseURL,
       );
       const eventSource = new ReconnectingEventSource(url.href, {
         max_retry_time: 3000,
@@ -119,9 +119,9 @@ export class ValetudoClient {
         (event: MessageEvent) => {
           this.emitter.emit(
             ValetudoEventKey.StateAttributes,
-            JSON.parse(event.data)
+            JSON.parse(event.data),
           );
-        }
+        },
       );
     }
 
@@ -130,12 +130,12 @@ export class ValetudoClient {
 
   @logMethod()
   getPresetSelections<T extends PresetSelectionCapacity>(
-    capability: T
+    capability: T,
   ): Promise<PresetSelectionValue<T>[]> {
     return this.client
-      .get<PresetSelectionValue<T>[]>(
-        `/robot/capabilities/${capability}/presets`
-      )
+      .get<
+        PresetSelectionValue<T>[]
+      >(`/robot/capabilities/${capability}/presets`)
       .then((res) => sortPresets(res.data));
   }
 
@@ -145,7 +145,7 @@ export class ValetudoClient {
       | Capability.FanSpeedControl
       | Capability.WaterUsageControl
       | Capability.OperationModeControl,
-    level: PresetSelectionState["value"]
+    level: PresetSelectionState["value"],
   ) {
     return this.client
       .put(`robot/capabilities/${capability}/preset`, {
@@ -157,9 +157,9 @@ export class ValetudoClient {
   @logMethod()
   getConsumableStates() {
     return this.client
-      .get<ConsumableState[]>(
-        `robot/capabilities/${Capability.ConsumableMonitoring}`
-      )
+      .get<
+        ConsumableState[]
+      >(`robot/capabilities/${Capability.ConsumableMonitoring}`)
       .then((res) => res.data);
   }
 
@@ -167,7 +167,7 @@ export class ValetudoClient {
   getConsumableProperties() {
     return this.client
       .get<ConsumableProperties>(
-        `robot/capabilities/${Capability.ConsumableMonitoring}/properties`
+        `robot/capabilities/${Capability.ConsumableMonitoring}/properties`,
       )
       .then((res) => res.data);
   }
@@ -195,7 +195,7 @@ export class ValetudoClient {
   getSpeakerVolume() {
     return this.client
       .get<SpeakerVolumeState>(
-        `robot/capabilities/${Capability.SpeakerVolumeControl}`
+        `robot/capabilities/${Capability.SpeakerVolumeControl}`,
       )
       .then((res) => res.data.volume);
   }

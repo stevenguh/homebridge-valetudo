@@ -33,11 +33,11 @@ declare module "dnssd" {
     on(event: "serviceUp", listener: (service: Service<K>) => void): Browser<K>;
     on(
       event: "serviceChanged",
-      listener: (service: Service<K>) => void
+      listener: (service: Service<K>) => void,
     ): Browser<K>;
     on(
       event: "serviceDown",
-      listener: (service: Service<K>) => void
+      listener: (service: Service<K>) => void,
     ): Browser<K>;
     on(event: "error", listener: (e: Error) => void): Browser<K>;
   }

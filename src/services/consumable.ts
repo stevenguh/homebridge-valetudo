@@ -14,7 +14,7 @@ import { milliseconds } from "../duration";
 
 function getEnumName<T extends object>(
   enumType: T,
-  enumValue: string
+  enumValue: string,
 ): keyof T | undefined {
   const keys = Object.keys(enumType) as Array<keyof T>;
 
@@ -53,7 +53,7 @@ export class ConsumableService extends BaseService {
     context: HomebridgeContext,
     accessory: PlatformAccessory,
     client: ValetudoClient,
-    properties: ConsumableProperties
+    properties: ConsumableProperties,
   ) {
     super(context, accessory, client);
 
@@ -66,7 +66,7 @@ export class ConsumableService extends BaseService {
       const service = this.getOrAddNamedService(
         this.service.FilterMaintenance,
         id,
-        id
+        id,
       );
       service.setCharacteristic(this.characteristic.Name, name);
       this.characteristics.push(
@@ -78,7 +78,7 @@ export class ConsumableService extends BaseService {
           .onGet(this.getFilterLifeLevel.bind(this, meta)),
         service
           .getCharacteristic(this.characteristic.ResetFilterIndication)
-          .onSet(this.resetFilterIndication.bind(this, meta))
+          .onSet(this.resetFilterIndication.bind(this, meta)),
       );
     }
   }
@@ -93,11 +93,11 @@ export class ConsumableService extends BaseService {
     const state = states.find(
       (state) =>
         state.type === meta.type &&
-        (state.subType ?? ConsumableSubType.None) === meta.subType
+        (state.subType ?? ConsumableSubType.None) === meta.subType,
     );
     if (!state) {
       throw new Error(
-        `State for consumable ${getConsumableName(meta)} is not found`
+        `State for consumable ${getConsumableName(meta)} is not found`,
       );
     }
 
@@ -119,7 +119,7 @@ export class ConsumableService extends BaseService {
 
   private async resetFilterIndication(
     meta: ConsumableMeta,
-    value: CharacteristicValue
+    value: CharacteristicValue,
   ) {
     if (value === 1) {
       return this.client.putResetConsumable(meta);
