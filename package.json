@@ -28,7 +28,6 @@
     "homebridge-plugin"
   ],
   "devDependencies": {
-    "@matter/types": "^0.17.0-alpha.0-20260508-96d5c3a88",
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^10.0.1",
     "@types/eventsource": "^3.0.0",
@@ -47,6 +46,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "@matter/types": "^0.17.0-alpha.0-20260508-96d5c3a88",
     "axios": "^1.16.1",
     "dnssd": "^0.4.1",
     "eventsource": "^2.0.2",
