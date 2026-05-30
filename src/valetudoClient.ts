@@ -12,6 +12,10 @@ import {
   PresetSelectionState,
   PresetSelectionStateIntensity,
   PresetSelectionStateMode,
+  MapSegment,
+  RawMapData,
+  RawMapLayerType,
+  RawRobotState,
   RobotAttribute,
   RobotInformation,
   RobotProperties,
@@ -94,6 +98,20 @@ export class ValetudoClient {
     return this.client.get<RobotProperties>("robot/properties").then((res) => {
       return res.data;
     });
+  }
+
+  @logMethod()
+  getState() {
+    return this.client
+      .get<RawRobotState>("robot/state")
+      .then((res) => res.data);
+  }
+
+  @logMethod()
+  getMap() {
+    return this.client
+      .get<RawMapData>("robot/state/map")
+      .then((res) => res.data);
   }
 
   @logMethod()
@@ -197,6 +215,30 @@ export class ValetudoClient {
     return this.client
       .get<Segment[]>(`robot/capabilities/${Capability.MapSegmentation}`)
       .then((res) => res.data);
+  }
+
+  @logMethod()
+  getMapSegments(): Promise<MapSegment[]> {
+    return this.getMap().then((map) => {
+      const segments: MapSegment[] = [];
+      for (const layer of map.layers) {
+        if (layer.type !== RawMapLayerType.Segment) {
+          continue;
+        }
+
+        const id = layer.metaData.segmentId;
+        if (id === undefined) {
+          continue;
+        }
+
+        segments.push({
+          id,
+          name: layer.metaData.name,
+          active: layer.metaData.active ?? false,
+        });
+      }
+      return segments;
+    });
   }
 
   @logMethod()

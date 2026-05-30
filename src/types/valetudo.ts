@@ -267,6 +267,10 @@ export interface Segment {
   name?: string;
 }
 
+export interface MapSegment extends Segment {
+  active: boolean;
+}
+
 export interface RobotInformation {
   manufacturer: string;
   modelName: string;
